@@ -72,6 +72,8 @@ public class VYTrackUtils {
      * @return page name, for example: Dashboard
      */
     public static String getPageSubtitle() {
+        //any time we are verifying page name, or page subtitle, loader mask appears
+        waitUntilLoaderScreenDisappear(Driver.getDriver());
         return Driver.getDriver().findElement(By.cssSelector(pageTitleLocator)).getText();
     }
 }
