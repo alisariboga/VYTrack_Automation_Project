@@ -53,6 +53,22 @@ public class VYTrackUtils {
     }
 
     /**
+     * This method will navigate user to the specific module on vytrack application
+     * For example: if tab is equals to activities, module equals to Calls,
+     * Ten method will navigate user to this page: https://qa2.vytrack.com/call/
+     *
+     * @param tab
+     * @param module
+     */
+
+    public static void navigateToModule(String tab, String module) {
+        String tabLocator = "//span[contains(text(), '" + tab + "') and contains(@class, 'title title-level-1')]";
+        String moduleLocator = "//span[contains(text(), '" + module + "') and contains(@class, 'title title-level-2')]";
+        SeleniumUtils.clickWithWait(Driver.getDriver(), By.xpath(tabLocator), 5);
+        Driver.getDriver().findElement(By.xpath(moduleLocator)).click();
+    }
+
+    /**
      * Waits until loader screen present. If loader screen will not pop up at all,
      * NoSuchElementException will be handled but try/catxh block
      * Thus, we can continue in any case
@@ -64,7 +80,7 @@ public class VYTrackUtils {
             WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(Long.parseLong(ConfigurationReader.getProperty("excplicitwait"))));
             wait.until(ExpectedConditions.invisibilityOf(driver.findElement(By.cssSelector(loaderMaskLocator))));
         } catch (Exception e) {
-            System.out.println(e + " :: Loader mask doesn't present");
+            System.out.println(e + " :: Loader mask DOES NOT present");
         }
     }
 

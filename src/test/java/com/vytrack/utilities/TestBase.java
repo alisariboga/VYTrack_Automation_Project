@@ -21,7 +21,7 @@ public class TestBase {
     public Actions action;
 
     @BeforeMethod
-    public void setup(){
+    public void setup() {
         driver = Driver.getDriver();
         action = new Actions(driver);
         driver.manage().timeouts().implicitlyWait(Long.valueOf(ConfigurationReader.getProperty("implicitwait")), TimeUnit.SECONDS);
@@ -30,8 +30,8 @@ public class TestBase {
     }
 
     @AfterMethod
-    public void teardown(ITestResult result){
-        if(ITestResult.FAILURE == result.getStatus()) {
+    public void teardown(ITestResult result) {
+        if (ITestResult.FAILURE == result.getStatus()) {
             //We are creating object to take a screenshot
             TakesScreenshot screenshot = (TakesScreenshot) driver;
             //call method to take a screenshot
@@ -39,7 +39,7 @@ public class TestBase {
             try {
                 //getName() - will return name of the test method
                 //and save screenshot under project > screenshots with date/time/test name tag
-                FileUtils.copyFile(src, new File(System.getProperty("user.dir") + "/screenshots/" + LocalDateTime.now() +"_"+ result.getName() + ".png"));
+                FileUtils.copyFile(src, new File(System.getProperty("user.dir") + "/screenshots/" + LocalDateTime.now() + "_" + result.getName() + ".png"));
             } catch (IOException e) {
                 e.printStackTrace();
             }
