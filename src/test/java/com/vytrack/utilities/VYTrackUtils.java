@@ -77,7 +77,7 @@ public class VYTrackUtils {
      */
     public static void waitUntilLoaderScreenDisappear(WebDriver driver) {
         try {
-            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(Long.parseLong(ConfigurationReader.getProperty("excplicitwait"))));
+            WebDriverWait wait = new WebDriverWait(driver, Long.parseLong(ConfigurationReader.getProperty("excplicitwait")));
             wait.until(ExpectedConditions.invisibilityOf(driver.findElement(By.cssSelector(loaderMaskLocator))));
         } catch (Exception e) {
             System.out.println(e + " :: Loader mask DOES NOT present");

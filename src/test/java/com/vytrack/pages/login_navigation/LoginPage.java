@@ -2,7 +2,6 @@ package com.vytrack.pages.login_navigation;
 
 import com.vytrack.utilities.ConfigurationReader;
 import com.vytrack.utilities.Driver;
-import com.vytrack.utilities.VYTrackUtils;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
@@ -13,7 +12,7 @@ import java.time.Duration;
 
 public class LoginPage {
 
-    private WebDriverWait wait = new WebDriverWait(Driver.getDriver(), Duration.ofSeconds(Long.valueOf(ConfigurationReader.getProperty("excplicitwait"))));
+    private WebDriverWait wait = new WebDriverWait(Driver.getDriver(), (Long.valueOf(ConfigurationReader.getProperty("excplicitwait"))));
 
     @FindBy(id = "prependedInput")
     public WebElement usernameElement;

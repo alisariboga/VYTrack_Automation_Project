@@ -61,6 +61,7 @@ public class CalenderEventsPage {
      */
     public boolean verifyHeaderExist(String headerNameOrColumnName) {
         for (WebElement tableHeader : headers) {
+//            System.out.println(tableHeader.getText());
             if (tableHeader.getText().equals(headerNameOrColumnName)) {
                 return true;
             }

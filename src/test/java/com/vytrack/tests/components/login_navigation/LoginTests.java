@@ -9,8 +9,9 @@ import org.testng.annotations.Test;
 
 public class LoginTests extends TestBase {
 
-    @Test(priority = 1)
+    @Test
     public void loginTest() {
+        extentLogger = report.createTest("Login as a store manager");
         LoginPage loginPage = new LoginPage();
         String username = ConfigurationReader.getProperty("storemanagerusername");
         String password = ConfigurationReader.getProperty("storemanagerpassword");
@@ -20,9 +21,10 @@ public class LoginTests extends TestBase {
         /* to verify that Dashboard page opened
         Once page name Dashboard displays, means that we are logged in successfully */
         Assert.assertEquals(VYTrackUtils.getPageSubtitle(), "Table");
+        extentLogger.pass("Verified that page name is Table");
     }
 
-    @Test(priority = 2)
+    @Test
     public void negativeLoginTest() {
         String wrongUsername = "wrongusername";
         String wrongPassword = "wrongpassword";
