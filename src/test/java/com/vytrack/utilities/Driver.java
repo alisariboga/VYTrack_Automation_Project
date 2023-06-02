@@ -6,7 +6,7 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 
 public class Driver {
-    private static WebDriver driver;
+    static WebDriver driver;
 
     public static WebDriver getDriver() {
         if (driver == null) {

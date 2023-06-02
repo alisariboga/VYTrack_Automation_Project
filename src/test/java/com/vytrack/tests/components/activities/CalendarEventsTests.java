@@ -1,6 +1,6 @@
 package com.vytrack.tests.components.activities;
 
-import com.vytrack.pages.activities.CalenderEventsPage;
+import com.vytrack.pages.activities.CalendarEventsPage;
 import com.vytrack.pages.login_navigation.LoginPage;
 import com.vytrack.utilities.ConfigurationReader;
 import com.vytrack.utilities.SeleniumUtils;
@@ -15,7 +15,7 @@ public class CalendarEventsTests extends TestBase {
     public void verifyTitleColumn() {
         extentLogger = report.createTest("Verify column that column names are adjustable");
         LoginPage loginPage = new LoginPage();
-        CalenderEventsPage calenderEventsPage = new CalenderEventsPage();
+        CalendarEventsPage calendarEventsPage = new CalendarEventsPage();
         String username = ConfigurationReader.getProperty("storemanagerusername");
         String password = ConfigurationReader.getProperty("storemanagerpassword");
         //login
@@ -27,19 +27,19 @@ public class CalendarEventsTests extends TestBase {
 
         //unselect title option from grid settings
         VYTrackUtils.waitUntilLoaderScreenDisappear(driver);
-        calenderEventsPage.selectGridSetting("Title", false);
-        SeleniumUtils.waitPlease(3);
+        SeleniumUtils.waitForStaleElement(calendarEventsPage.gridSettingsElement);
+        calendarEventsPage.selectGridSetting("Title", false);
 
-        //Verify that title column name is not visible any more
-        Assert.assertFalse(calenderEventsPage.verifyHeaderExist("Title"), "Title column name still visible!");
+        //Verify that title column name is not visible anymore
+        Assert.assertFalse(calendarEventsPage.verifyHeaderExist("Title"), "Title column name still visible!");
 
         //to close grid settings menu
-        calenderEventsPage.gridSettingsElement.click();
+        calendarEventsPage.gridSettingsElement.click();
 
-        calenderEventsPage.selectGridSetting("Title", true);
+        calendarEventsPage.selectGridSetting("Title", true);
         SeleniumUtils.waitPlease(3);
 
         //Verify that title column name is visible again
-        Assert.assertTrue(calenderEventsPage.verifyHeaderExist("Title"), "Title column name is not visible!");
+        Assert.assertTrue(calendarEventsPage.verifyHeaderExist("Title"), "Title column name is not visible!");
     }
 }

@@ -45,7 +45,7 @@ public class TestBase {
         driver.get(ConfigurationReader.getProperty("url"));
     }
 
-    //ITestresult describes the result of a testt
+    //ITestresult describes the result of a tests
     //we can determine if test failed, passed or ignored
     @AfterMethod
     public void teardown(ITestResult result) {

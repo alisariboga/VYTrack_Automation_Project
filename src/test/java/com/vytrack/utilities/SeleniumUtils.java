@@ -10,12 +10,12 @@ import org.testng.Assert;
 
 import java.io.File;
 import java.io.IOException;
-import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.vytrack.utilities.Driver.driver;
 import static org.testng.AssertJUnit.assertTrue;
 
 public class SeleniumUtils {
@@ -288,7 +288,7 @@ public class SeleniumUtils {
      *
      * @param element
      */
-    public void waitForStaleElement(WebElement element) {
+    public static void waitForStaleElement(WebElement element) {
         int y = 0;
         while (y <= 15) {
             if (y == 1)
@@ -311,6 +311,21 @@ public class SeleniumUtils {
                     }
                 }
         }
+    }
+
+    public static boolean retryingFindClick(By by) {
+        boolean result = false;
+        int attempts = 0;
+        while(attempts < 2) {
+            try {
+                driver.findElement(by).click();
+                result = true;
+                break;
+            } catch(StaleElementReferenceException e) {
+            }
+            attempts++;
+        }
+        return result;
     }
 
     /**
@@ -403,7 +418,7 @@ public class SeleniumUtils {
      *
      * @param element
      */
-    public static void executeJScommand(WebElement element, String command) {
+    public static void executeJSCommand(WebElement element, String command) {
         JavascriptExecutor jse = (JavascriptExecutor) Driver.getDriver();
         jse.executeScript(command, element);
     }
@@ -434,6 +449,5 @@ public class SeleniumUtils {
             e.printStackTrace();
         }
         return target;
-
     }
 }

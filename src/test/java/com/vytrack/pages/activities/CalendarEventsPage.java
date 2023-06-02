@@ -9,7 +9,9 @@ import org.openqa.selenium.support.PageFactory;
 
 import java.util.List;
 
-public class CalenderEventsPage {
+import static com.vytrack.utilities.VYTrackUtils.waitUntilLoaderScreenDisappear;
+
+public class CalendarEventsPage {
     static WebDriver driver = Driver.getDriver();
 
     @FindBy(css = "[title='Create Calendar event']")
@@ -34,22 +36,25 @@ public class CalenderEventsPage {
     public List<WebElement> headers;
 
 
-    public CalenderEventsPage() {
+    public CalendarEventsPage() {
         PageFactory.initElements(Driver.getDriver(), this);
     }
 
     public void selectGridSetting(String name, boolean yesOrNo) {
-        //Click on grid options
+        //click on grid options
+        waitUntilLoaderScreenDisappear(driver);
         gridSettingsElement.click();
-        //Create locator for grid option based on the name
-        String locator = "//td//label[text()='" + name + "']/../following-sibling::td/input";
+        //create locator for grid option based on the name
+        String locator = "//td//label[text()='" + name + "']/../following-sibling::td//input";
         //find element
-        WebElement gridOption = driver.findElement(By.xpath(locator));
+        //you can also call Driver.get()
+        WebElement gridOption = Driver.getDriver().findElement(By.xpath(locator));
         //if param yesOrNo is true, and checkbox is not selected yet
-        //click on it OR
-        //Checkbox is selected, and you want to unselect it
-        if (yesOrNo && !gridOption.isSelected() ||
-                !yesOrNo && gridOption.isSelected()) {
+        //click on it
+        //or
+        //ckeckbox is selected and you want to unselect it
+        if ((yesOrNo && !gridOption.isSelected()) || (
+                !yesOrNo && gridOption.isSelected())) {
             gridOption.click();
         }
     }
