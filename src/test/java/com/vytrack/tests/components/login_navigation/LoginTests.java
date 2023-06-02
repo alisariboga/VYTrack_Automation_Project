@@ -30,10 +30,6 @@ public class LoginTests extends TestBase {
     @Parameters({"username", "password"})
     public void loginTestWithParameters(@Optional String username, @Optional String password) {
         extentLogger = report.createTest("Login as a store manager");
-        if (username == null) {
-            username = ConfigurationReader.getProperty("storemanagerusername");
-            password = ConfigurationReader.getProperty("storemanagerpassword");
-        }
         LoginPage loginPage = new LoginPage();
         loginPage.clickRememberMe();
         System.out.println(username + " " + password);
