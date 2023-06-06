@@ -1,4 +1,6 @@
 package com.vytrack.pages.activities;
 
-public class CallsPage {
+import com.vytrack.utilities.BasePage;
+
+public class CallsPage extends BasePage {
 }

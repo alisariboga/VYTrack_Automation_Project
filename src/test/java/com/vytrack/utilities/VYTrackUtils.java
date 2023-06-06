@@ -6,8 +6,6 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import java.time.Duration;
-
 public class VYTrackUtils {
     //we don't want to access these variables outside.
     private static String usernameLocator = "prependedInput";
@@ -28,7 +26,7 @@ public class VYTrackUtils {
         //Keys.ENTER means click enter after entering password
         //in this way, we don't need to click login button
         driver.findElement(By.id(passwordLocator)).sendKeys(password, Keys.ENTER);
-        SeleniumUtils.waitPlease(3);
+        BrowserUtils.waitPlease(3);
     }
 
     /**
@@ -45,11 +43,11 @@ public class VYTrackUtils {
         String tabLocator = "//span[contains(text(), '" + tab + "') and contains(@class, 'title title-level-1')]";
         String moduleLocator = "//span[contains(text(), '" + module + "') and contains(@class, 'title title-level-2')]";
         //driver.findElement(By.xpath(tabLocator)).click();
-        SeleniumUtils.clickWithWait(driver, By.xpath(tabLocator), 5);
-        SeleniumUtils.waitPlease(1);
+        BrowserUtils.clickWithWait(driver, By.xpath(tabLocator), 5);
+        BrowserUtils.waitPlease(1);
         //driver.findElement(By.xpath(moduleLocator)).click();
-        SeleniumUtils.clickWithWait(driver, By.xpath(moduleLocator), 5);
-        SeleniumUtils.waitPlease(4);
+        BrowserUtils.clickWithWait(driver, By.xpath(moduleLocator), 5);
+        BrowserUtils.waitPlease(4);
     }
 
     /**
@@ -64,7 +62,7 @@ public class VYTrackUtils {
     public static void navigateToModule(String tab, String module) {
         String tabLocator = "//span[contains(text(), '" + tab + "') and contains(@class, 'title title-level-1')]";
         String moduleLocator = "//span[contains(text(), '" + module + "') and contains(@class, 'title title-level-2')]";
-        SeleniumUtils.clickWithWait(Driver.getDriver(), By.xpath(tabLocator), 5);
+        BrowserUtils.clickWithWait(Driver.getDriver(), By.xpath(tabLocator), 5);
         Driver.getDriver().findElement(By.xpath(moduleLocator)).click();
     }
 

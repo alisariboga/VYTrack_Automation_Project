@@ -2,76 +2,111 @@ package com.vytrack.utilities;
 
 import com.aventstack.extentreports.ExtentReports;
 import com.aventstack.extentreports.ExtentTest;
+import com.aventstack.extentreports.Status;
+import com.aventstack.extentreports.markuputils.ExtentColor;
+import com.aventstack.extentreports.markuputils.MarkupHelper;
 import com.aventstack.extentreports.reporter.ExtentHtmlReporter;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.interactions.Actions;
 import org.testng.ITestResult;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.AfterTest;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.BeforeTest;
+import org.testng.annotations.*;
+import org.testng.asserts.SoftAssert;
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.concurrent.TimeUnit;
 
 public class TestBase {
 
     //should be public/protected !!!!
-    public WebDriver driver;
-    public Actions action;
-    // we need his object for building reports but it doesn't itself
-    protected ExtentReports report;
-    protected ExtentHtmlReporter htmlReporter;
-    protected ExtentTest extentLogger;
+    protected WebDriver driver;
+    protected Pages pages;
+    protected SoftAssert softAssert;
+    protected static ExtentReports report;
+    protected static ExtentHtmlReporter htmlReporter;
+    protected static ExtentTest extentLogger;
+    private static final Logger logger = LogManager.getLogger();
 
-    @BeforeTest
-    public void testSetup() {
-        //we are creating actual reporter
+
+    @BeforeSuite(alwaysRun = true)
+    @Parameters("test")
+    public void setUpTest(@Optional String test) {
+        // actual reporter
         report = new ExtentReports();
-        String pathToReport = System.getProperty("/user.dir") + "test-output/report.html";
-        htmlReporter = new ExtentHtmlReporter(pathToReport);
-
+        // System.getProperty("user.dir") ---> get the path to current project
+        // test-output --> folder in the current project, will be created by testng if
+        // it does not already exist
+        // report.html --> name of the report file
+        if (test == null) {
+            test = "reports";
+        }
+        String filePath = System.getProperty("user.dir") + "/test-output/" + test + "/" + LocalDate.now().format(DateTimeFormatter.ofPattern("MM_dd_yyyy")) + "/report.html";
+        htmlReporter = new ExtentHtmlReporter(filePath);
+        logger.info("Report path: "+filePath);
         report.attachReporter(htmlReporter);
+        report.setSystemInfo("ENV", "qa");
+        report.setSystemInfo("ENV", "qa");
+        report.setSystemInfo("browser", ConfigurationReader.getProperty("browser"));
         report.setSystemInfo("OS", System.getProperty("os.name"));
-        htmlReporter.config().setDocumentTitle("VYTrack Test Automation");
+        htmlReporter.config().setDocumentTitle("VYTrack Test automation");
+        htmlReporter.config().setReportName("VYTrack Test automation");
+        if (System.getenv("runner") != null) {
+            extentLogger.info("Running: " + System.getenv("runner"));
+        }
     }
 
-    @BeforeMethod
-    public void setup() {
-        driver = Driver.getDriver();
-        action = new Actions(driver);
+
+    @BeforeMethod(alwaysRun = true)
+    @Parameters("browser")
+    public void setup(@Optional String browser) {
+        driver = Driver.getDriver(browser);
+        pages = new Pages();
+        softAssert = new SoftAssert();
         driver.manage().timeouts().implicitlyWait(Long.valueOf(ConfigurationReader.getProperty("implicitwait")), TimeUnit.SECONDS);
         driver.manage().window().maximize();
-        driver.get(ConfigurationReader.getProperty("url"));
+        String URL = ConfigurationReader.getProperty("url"+ConfigurationReader.getProperty("environment"));
+        driver.get(URL);
+        logger.info("URL: "+URL);
     }
 
-    //ITestresult describes the result of a tests
-    //we can determine if test failed, passed or ignored
-    @AfterMethod
-    public void teardown(ITestResult result) {
-        if (ITestResult.FAILURE == result.getStatus()) {
-            //We are creating object to take a screenshot
-            //if test failed get a screenshot and save location to the image
-            String pathToTheScreenshot = SeleniumUtils.getScreenshot(result.getName());
-            // capture the name of test method that failed
+    @AfterMethod(alwaysRun = true)
+    @Parameters("browser")
+    public void teardown(@Optional String browser, ITestResult result) {
+        // checking if the test method failed
+        if (result.getStatus() == ITestResult.FAILURE) {
+            // get screenshot using the utility method and save the location of the screenshot
+            String screenshotLocation = BrowserUtils.getScreenshot(result.getName());
+
+            // capture the name of test method
             extentLogger.fail(result.getName());
+
+            // add the screenshot to the report
             try {
-                //to add screenshot into report
-                extentLogger.addScreenCaptureFromPath(pathToTheScreenshot);
+                extentLogger.addScreenCaptureFromPath(screenshotLocation);
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            //to add thrown exception into report
+            // capture the exception thrown
             extentLogger.fail(result.getThrowable());
+
+        } else if (result.getStatus() == ITestResult.SUCCESS) {
+            extentLogger.log(Status.PASS, MarkupHelper.createLabel(result.getName() + " PASSED ", ExtentColor.GREEN));
         } else if (result.getStatus() == ITestResult.SKIP) {
-            //if test skipped, this information will appear on the report
-            extentLogger.skip("Test case skipped" + result.getName());
+            extentLogger.skip("Test Case Skipped is " + result.getName());
         }
+        if(browser == null){
+            browser = ConfigurationReader.getProperty("browser");
+        }
+        extentLogger.log(Status.INFO, MarkupHelper.createLabel("Browser: "+browser, ExtentColor.ORANGE));
+        softAssert.assertAll();
         Driver.closeDriver();
     }
 
-    @AfterTest
+    @AfterSuite(alwaysRun = true)
     public void tearDownTest() {
+        logger.info(":: FLUSHING REPORT ::");
         report.flush();
     }
 }
