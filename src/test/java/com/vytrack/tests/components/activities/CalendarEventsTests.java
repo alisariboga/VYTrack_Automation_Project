@@ -26,20 +26,24 @@ public class CalendarEventsTests extends TestBase {
         VYTrackUtils.navigateToModule("Activities", "Calendar Events");
 
         //unselect title option from grid settings
-        VYTrackUtils.waitUntilLoaderScreenDisappear(driver);
         SeleniumUtils.waitForStaleElement(calendarEventsPage.gridSettingsElement);
         calendarEventsPage.selectGridSetting("Title", false);
+        SeleniumUtils.waitForStaleElement(calendarEventsPage.gridSettingsElement);
+        SeleniumUtils.waitPlease(3);
 
         //Verify that title column name is not visible anymore
         Assert.assertFalse(calendarEventsPage.verifyHeaderExist("Title"), "Title column name still visible!");
+        extentLogger.pass("Verified that title column name is not visible any more.");
+
 
         //to close grid settings menu
         calendarEventsPage.gridSettingsElement.click();
+        extentLogger.info("Click on grid settings button.");
 
         calendarEventsPage.selectGridSetting("Title", true);
-        SeleniumUtils.waitPlease(3);
 
         //Verify that title column name is visible again
         Assert.assertTrue(calendarEventsPage.verifyHeaderExist("Title"), "Title column name is not visible!");
+        extentLogger.pass("Verified that title column name is visible again.");
     }
 }

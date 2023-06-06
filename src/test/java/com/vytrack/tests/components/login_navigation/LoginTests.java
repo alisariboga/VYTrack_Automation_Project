@@ -5,6 +5,7 @@ import com.vytrack.utilities.ConfigurationReader;
 import com.vytrack.utilities.TestBase;
 import com.vytrack.utilities.VYTrackUtils;
 import org.testng.Assert;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
@@ -49,5 +50,30 @@ public class LoginTests extends TestBase {
         loginPage.login(wrongUsername, wrongPassword);
         Assert.assertEquals(loginPage.getErrorMessage(), "Invalid user name or password.");
         extentLogger.pass("Verified that warning message displayed: Invalid user name or password");
+    }
+
+    @Test(dataProvider = "credentials_info")
+    public void loginWithDataProvider(String username, String password) {
+        LoginPage loginPage = new LoginPage();
+        loginPage.clickRememberMe();
+        loginPage.login(username, password);
+        extentLogger = report.createTest("Login as : " + username);
+        extentLogger.info(username + " : " + password);
+        if (username == "storemanager85") {
+            Assert.assertEquals(VYTrackUtils.getPageSubtitle(), "Table");
+        } else if (username == "salesmanager110") {
+            Assert.assertEquals(VYTrackUtils.getPageSubtitle(), "Dashboard");
+        }
+        extentLogger.pass("Verified page name: " + VYTrackUtils.getPageSubtitle());
+    }
+
+    @DataProvider(name = "credentials_info")
+    public static Object[][] credentials() {
+        return new Object[][]{
+                {"storemanager85", "UserUser123"},
+                {"salesmanager110", "UserUser123"},
+                {"salesmanager133", "UserUser123"},
+                {"salesmanager65", "UserUser123"}
+        };
     }
 }
