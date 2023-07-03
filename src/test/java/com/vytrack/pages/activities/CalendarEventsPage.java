@@ -18,8 +18,6 @@ import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 
-import static com.vytrack.utilities.VYTrackUtils.waitUntilLoaderScreenDisappear;
-
 public class CalendarEventsPage extends BasePage {
     @FindBy(css = "[title='Create Calendar event']")
     public WebElement createCalendarEventBtn;

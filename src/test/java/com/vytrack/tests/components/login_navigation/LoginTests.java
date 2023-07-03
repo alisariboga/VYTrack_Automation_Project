@@ -1,7 +1,6 @@
 package com.vytrack.tests.components.login_navigation;
 
 import com.vytrack.utilities.ConfigurationReader;
-import com.vytrack.utilities.Pages;
 import com.vytrack.utilities.TestBase;
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;
@@ -44,10 +43,10 @@ public class LoginTests extends TestBase {
         //but, if there is no value - you will null
         //thus, let's make sure parameters are not null
         //if so, let's pull credentials from properties
-        if (username == null) {
-            username = ConfigurationReader.getProperty("storemanagerusername");
-            password = ConfigurationReader.getProperty("storemanagerpassword");
-        }
+//        if (username == null) {
+//            username = ConfigurationReader.getProperty("storemanagerusername");
+//            password = ConfigurationReader.getProperty("storemanagerpassword");
+//        }
         //we are instantiating page class inside a tests class,
         //because for second test, if we run all tests in a row, driver will have null session
         pages.loginPage().clickRememberMe();
